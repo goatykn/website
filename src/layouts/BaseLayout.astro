@@ -44,7 +44,7 @@ const titleWithSite = title !== "" ? `${title} - Goaty` : "Goaty";
     <meta name="generator" content={Astro.generator} />
     {isPreview && <meta name="robots" content="noindex, nofollow" />}
     <title>{titleWithSite}</title>
-    <OpenGraph title={title} description={description} />
+    <OpenGraph title={titleWithSite} description={description} />
     {/* Prevent dark mode from flickering on page load. */}
     <script is:inline>
       const isDarkMode = localStorage.getItem("theme");
