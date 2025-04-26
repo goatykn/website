@@ -1,0 +1,35 @@
+---
+import type { InferEntrySchema } from "astro:content";
+import LikeButton from "../components/LikeButton.astro";
+import { formatDateToJapanese } from "../utils/format-date";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  frontmatter: InferEntrySchema<"posts">;
+  postSlug: string;
+}
+
+const { frontmatter, postSlug } = Astro.props;
+---
+
+<BaseLayout title={frontmatter.title} description={frontmatter.description}>
+  <article>
+    <div class="mb-10 flex flex-col items-center">
+      <span class="py-4 text-8xl">{frontmatter.emoji}</span>
+      <h1 class="mb-7 text-3xl font-semibold">{frontmatter.title}</h1>
+      <div class="flex gap-12">
+        <div class="my-1 flex items-center gap-2">
+          <time
+            class="text-gray-500 dark:text-gray-400"
+            datetime={frontmatter.pubDate.toISOString()}
+            >{formatDateToJapanese(frontmatter.pubDate)}</time
+          >
+        </div>
+      </div>
+    </div>
+    <slot />
+    <div class="mt-20">
+      <LikeButton server:defer postSlug={postSlug} />
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,114 @@
+---
+interface Props {
+  options: {
+    name: string;
+    href: string;
+  }[];
+  currentOptionName: string;
+}
+
+const { options, currentOptionName } = Astro.props;
+---
+
+<div class="relative inline-block text-left text-sm">
+  <div>
+    <button
+      type="button"
+      class="inline-flex cursor-pointer items-center rounded-lg p-2 font-semibold transition-all hover:bg-gray-200/90 dark:hover:bg-gray-300/10"
+      id="menu-button"
+      aria-expanded="true"
+      aria-haspopup="true"
+    >
+      {currentOptionName}
+      <svg
+        class="size-6"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        aria-hidden="true"
+        data-slot="icon"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+          clip-rule="evenodd"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div
+    class="absolute z-10 hidden w-36 scale-95 transform rounded-lg bg-gray-100 opacity-0 shadow-md transition duration-100 ease-out dark:bg-gray-700"
+    role="menu"
+    aria-orientation="vertical"
+    aria-labelledby="menu-button"
+    tabindex="-1"
+  >
+    <div class="py-1" role="none">
+      {
+        options.map((option, i) => {
+          const isCurrentOption = option.name == currentOptionName;
+          return (
+            <a
+              href={option.href}
+              class={
+                "m-1 block rounded-lg px-4 py-2 font-semibold transition-all hover:bg-gray-200/90 dark:hover:bg-gray-300/10 " +
+                `${isCurrentOption ? "text-orange-400" : "text-gray-600 dark:text-gray-100"}`
+              }
+              role="menuitem"
+              tabindex="-1"
+              id={`menu-item-${i}`}
+            >
+              {option.name}
+            </a>
+          );
+        })
+      }
+    </div>
+  </div>
+</div>
+
+<script>
+  // https://docs.astro.build/en/guides/view-transitions/#script-re-execution
+  // document.addEventListener("astro:page-load", () => {
+  document.addEventListener("DOMContentLoaded", () => {
+    const menuButton = document.getElementById("menu-button");
+    if (menuButton == null) return;
+    const menu = document.querySelector('[role="menu"]');
+    if (menu == null) return;
+
+    menuButton.addEventListener("click", () => {
+      const isHidden = menu.classList.contains("hidden");
+      if (isHidden) {
+        menu.classList.remove("hidden");
+        menu.classList.remove("opacity-0", "scale-95");
+        menu.classList.add("opacity-100", "scale-100");
+      } else {
+        menu.classList.add("opacity-0", "scale-95");
+        menu.classList.remove("opacity-100", "scale-100");
+        menu.addEventListener(
+          "transitionend",
+          () => {
+            menu.classList.add("hidden");
+          },
+          { once: true }
+        );
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      if (
+        !menuButton.contains(event.target as Node) &&
+        !menu.contains(event.target as Node)
+      ) {
+        menu.classList.add("opacity-0", "scale-95");
+        menu.classList.remove("opacity-100", "scale-100");
+        menu.addEventListener(
+          "transitionend",
+          () => {
+            menu?.classList.add("hidden");
+          },
+          { once: true }
+        );
+      }
+    });
+  });
+</script>

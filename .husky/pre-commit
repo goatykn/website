@@ -1,0 +1,4 @@
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+
+bunx lint-staged
+bun run build

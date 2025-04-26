@@ -1,0 +1,21 @@
+---
+
+---
+
+<button type="button" class="cursor-pointer" data-confetti-button>
+  <slot />
+</button>
+
+<script>
+  import JSConfetti from "js-confetti";
+
+  // https://docs.astro.build/en/guides/view-transitions/#script-re-execution
+  // document.addEventListener("astro:page-load", () => {
+  document.addEventListener("DOMContentLoaded", () => {
+    const jsConfetti = new JSConfetti();
+    const buttons = document.querySelectorAll("[data-confetti-button]");
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => jsConfetti.addConfetti());
+    });
+  });
+</script>

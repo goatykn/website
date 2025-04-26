@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "astro-build.astro-vscode",
+    "unifiedjs.vscode-mdx",
+    "editorconfig.editorconfig",
+    "yoavbls.pretty-ts-errors",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "bradlc.vscode-tailwindcss",
+    "davidanson.vscode-markdownlint",
+    "yzhang.markdown-all-in-one",
+    "jock.svg",
+    "dotenv.dotenv-vscode"
+  ],
+  "unwantedRecommendations": []
+}

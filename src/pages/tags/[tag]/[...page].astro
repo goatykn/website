@@ -1,0 +1,48 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PostCardGrid from "../../../components/PostCardGrid.astro";
+import PaginationButton from "../../../components/PaginationButton.astro";
+import type { GetStaticPathsOptions } from "astro";
+import { getTagInfo } from "../../../utils/tag-info";
+
+export const postsPerPage = 10;
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const allPosts = await getCollection("posts");
+
+  const uniqueTags = [
+    ...new Set(allPosts.map((post) => post.data.tags).flat())
+  ];
+
+  return uniqueTags.flatMap((tag) => {
+    const filteredPosts = allPosts.filter((post) =>
+      post.data.tags.includes(tag)
+    );
+    const descPosts = filteredPosts.sort(
+      (a, b) =>
+        new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+    );
+
+    return paginate(descPosts, {
+      pageSize: postsPerPage,
+      params: { tag: tag.toLowerCase() }
+    });
+  });
+}
+
+const { tag } = Astro.params;
+const { page } = Astro.props;
+const tagInfo = getTagInfo(tag);
+---
+
+<BaseLayout
+  title=`${tagInfo.label}`
+  description=`${tagInfo.label}タグが関連付けられた投稿の一覧ページです。`
+>
+  <h1 class="mb-10 text-4xl font-semibold">{tagInfo.emoji} {tagInfo.label}</h1>
+  <PostCardGrid posts={page.data} />
+  <div class="my-8">
+    <PaginationButton prevUrl={page.url.prev} nextUrl={page.url.next} />
+  </div>
+</BaseLayout>

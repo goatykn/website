@@ -1,0 +1,29 @@
+---
+import { getTagInfo } from "../utils/tag-info";
+
+interface Props {
+  tagCounts: Map<string, number>;
+}
+
+const { tagCounts } = Astro.props;
+---
+
+<div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+  {
+    [...tagCounts].map(([tag, count]) => {
+      const tagInfo = getTagInfo(tag);
+      return (
+        <a href={`/tags/${tag}`}>
+          <div class="flex flex-col items-center rounded-2xl bg-gray-200 p-6 transition-all hover:scale-105 hover:bg-gray-300/90 dark:bg-gray-800 dark:hover:bg-gray-100/10">
+            <span class="py-4 text-8xl">{tagInfo.emoji}</span>
+            <h3 class="pt-2 text-xl font-semibold">{tagInfo.label}</h3>
+            <div class="py-2 text-gray-500 dark:text-gray-400">
+              ({count}
+              {count != 1 ? "posts" : "post"})
+            </div>
+          </div>
+        </a>
+      );
+    })
+  }
+</div>

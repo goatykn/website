@@ -1,0 +1,30 @@
+---
+import { getCollection } from "astro:content";
+import type { GetStaticPathsOptions } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCardGrid from "../../components/PostCardGrid.astro";
+import PaginationButton from "../../components/PaginationButton.astro";
+
+export const postsPerPage = 10;
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const allPosts = await getCollection("posts");
+
+  const descPosts = allPosts.sort(
+    (a, b) =>
+      new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+  );
+
+  return paginate(descPosts, { pageSize: postsPerPage });
+}
+
+const { page } = Astro.props;
+---
+
+<BaseLayout title="Posts" description="投稿の一覧ページです。">
+  <h1 class="mb-10 text-4xl font-semibold">Posts</h1>
+  <PostCardGrid posts={page.data} />
+  <div class="my-8">
+    <PaginationButton prevUrl={page.url.prev} nextUrl={page.url.next} />
+  </div>
+</BaseLayout>

@@ -1,0 +1,44 @@
+---
+import { getCollection } from "astro:content";
+import NavigationButton from "../components/NavigationButton.astro";
+import PostCardGrid from "../components/PostCardGrid.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import GoatyLogo from "../assets/GoatyLogo.svg";
+import SocialLinks from "../components/SocialLinks.astro";
+
+const allPosts = await getCollection("posts");
+const recentPosts = allPosts
+  .sort(
+    (a, b) =>
+      new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+  )
+  .slice(0, 4);
+---
+
+<BaseLayout
+  title=""
+  description="ソフトウェアエンジニアGoatyのWebサイト兼ブログです。"
+>
+  <section class="mb-14">
+    <div class="flex flex-col items-center gap-4 sm:flex-row">
+      <GoatyLogo />
+      <div class="flex flex-col items-start">
+        <h1 class="mb-7 text-4xl font-semibold">Hey👋, I'm Goaty!</h1>
+        <p class="text-lg">I love bearded dragons! 😍🦎</p>
+        <div class="mt-7 text-gray-500 dark:text-gray-400">
+          <SocialLinks />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-14">
+    <h2 class="mb-7 text-2xl font-semibold">Recent Posts 👀</h2>
+    <PostCardGrid posts={recentPosts} />
+    <div class="mt-8 flex justify-end">
+      <NavigationButton href={"/posts"} current={true}>
+        See More →</NavigationButton
+      >
+    </div>
+  </section>
+</BaseLayout>

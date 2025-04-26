@@ -1,0 +1,34 @@
+---
+import Dropdown from "./Dropdown.astro";
+import NavigationButton from "./NavigationButton.astro";
+
+const navigation = [
+  { name: "Home", href: "/" },
+  { name: "Posts", href: "/posts" },
+  { name: "Tags", href: "/tags" }
+];
+const currentPath = Astro.url.pathname;
+const currentNavigationName = navigation.find((nav) =>
+  nav.href === "/" ? currentPath === nav.href : currentPath.startsWith(nav.href)
+)?.name;
+---
+
+<div class="hidden sm:flex sm:gap-4">
+  {
+    navigation.map((nav) => {
+      const isCurrentPath =
+        nav.href === "/"
+          ? currentPath === nav.href
+          : currentPath.startsWith(nav.href);
+      return (
+        <NavigationButton href={nav.href} current={isCurrentPath}>
+          {nav.name}
+        </NavigationButton>
+      );
+    })
+  }
+</div>
+
+<div class="sm:hidden">
+  <Dropdown options={navigation} currentOptionName={currentNavigationName!} />
+</div>

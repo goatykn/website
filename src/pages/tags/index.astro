@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TagCardGrid from "../../components/TagCardGrid.astro";
+
+const allPosts = await getCollection("posts");
+// const uniqueTags = [...new Set(allPosts.map((post) => post.data.tags).flat())];
+
+const tagCounts = new Map<string, number>();
+allPosts.forEach((post) => {
+  post.data.tags.forEach((tag) => {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  });
+});
+const sortedTagCounts = new Map(
+  [...tagCounts.entries()].sort((a, b) => b[1] - a[1])
+);
+// const sortedCounts = [...tagCounts.values()].sort((a, b) => b - a);
+// const sortedTags = [...sortedTagCounts.keys()];
+---
+
+<BaseLayout
+  title="Tags"
+  description="投稿に関連付けられたタグの一覧ページです。"
+>
+  <h1 class="mb-10 text-4xl font-semibold">Tags</h1>
+  <TagCardGrid tagCounts={sortedTagCounts} />
+</BaseLayout>

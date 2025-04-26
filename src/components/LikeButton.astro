@@ -1,0 +1,19 @@
+---
+import LikeCounterButton from "./LikeCounterButton";
+
+interface Props {
+  postSlug: string;
+}
+
+const { postSlug } = Astro.props;
+
+const kv = Astro.locals.runtime.env.KV_WEBSITE_LIKE_COUNT;
+const likeCount = (await kv.get(postSlug)) as string | null;
+const likeCountNum = parseInt(likeCount ?? "0");
+---
+
+<LikeCounterButton
+  client:idle
+  postSlug={postSlug}
+  initialCount={likeCountNum}
+/>

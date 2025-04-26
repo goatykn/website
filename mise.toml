@@ -1,0 +1,5 @@
+[tools]
+bun = "prefix:1.2"
+
+[env]
+_.file = '.env'

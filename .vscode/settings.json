@@ -1,0 +1,27 @@
+{
+  "[mdx]": {
+    "editor.defaultFormatter": "unifiedjs.vscode-mdx"
+  },
+  "[svg]": {
+    "editor.defaultFormatter": "jock.svg"
+  },
+  "cSpell.useGitignore": true,
+  "cSpell.words": [
+    "astrojs",
+    "bunx",
+    "frontmatter",
+    "goaty",
+    "headlessui",
+    "Noto",
+    "resvg",
+    "tsconfigs",
+    "zenn"
+  ],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // "[markdown]": {
+  //   "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  // },
+  "[astro]": {
+    "editor.defaultFormatter": "astro-build.astro-vscode"
+  }
+}

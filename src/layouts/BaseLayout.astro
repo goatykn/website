@@ -1,0 +1,71 @@
+---
+// import { ClientRouter } from "astro:transitions";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import OpenGraph from "../components/OpenGraph.astro";
+import { isPreview } from "../utils/mode";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+const titleWithSite = title !== "" ? `${title} - Goaty` : "Goaty";
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="description" content={description} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="/apple-touch-icon-precomposed.png"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Goaty" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={titleWithSite}
+      href={new URL("rss.xml", Astro.site)}
+    />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    {isPreview && <meta name="robots" content="noindex, nofollow" />}
+    <title>{titleWithSite}</title>
+    <OpenGraph title={title} description={description} />
+    {/* Prevent dark mode from flickering on page load. */}
+    <script is:inline>
+      const isDarkMode = localStorage.getItem("theme");
+      if (isDarkMode) document.documentElement.classList.toggle("dark");
+    </script>
+    <script is:inline src="https://embed.zenn.studio/js/listen-embed-event.js"
+    ></script>
+    {
+      /*
+        The View Transition API behaves inconsistently in Safari, so it is commented out.
+        <ClientRouter />
+     */
+    }
+  </head>
+  <body
+    class="mx-auto flex min-h-screen max-w-5xl flex-col bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100"
+  >
+    <Header />
+    <main class="mx-auto w-full flex-auto px-6 py-10 sm:w-3xl">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

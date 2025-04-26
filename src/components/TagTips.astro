@@ -1,0 +1,25 @@
+---
+import { getTagInfo } from "../utils/tag-info";
+
+interface Props {
+  tags: string[];
+}
+
+const { tags } = Astro.props;
+---
+
+<div class="flex flex-wrap gap-2">
+  {
+    tags.map((tag) => {
+      const tagInfo = getTagInfo(tag);
+      return (
+        <a
+          href={`/tags/${tag}`}
+          class="rounded-xl bg-gray-200/90 p-2 text-sm transition-all dark:bg-gray-300/10"
+        >
+          {tagInfo.emoji} {tagInfo.label}
+        </a>
+      );
+    })
+  }
+</div>

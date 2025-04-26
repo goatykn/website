@@ -1,0 +1,24 @@
+---
+
+---
+
+<button data-get-greeting>👋</button>
+
+<script>
+  import { actions } from "astro:actions";
+
+  // https://docs.astro.build/en/guides/view-transitions/#script-re-execution
+  // document.addEventListener("astro:page-load", () => {
+  document.addEventListener("DOMContentLoaded", () => {
+    document
+      .querySelector("[data-get-greeting]")
+      ?.addEventListener("click", async () => {
+        const { data, error } = await actions.getGreeting({ name: "Goaty" });
+        if (error) {
+          console.error("Failed to get greeting.");
+          return;
+        }
+        alert(data);
+      });
+  });
+</script>

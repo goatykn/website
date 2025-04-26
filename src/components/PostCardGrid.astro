@@ -1,0 +1,31 @@
+---
+import { type CollectionEntry } from "astro:content";
+import { timeAgo } from "../utils/format-date";
+
+interface Props {
+  posts: CollectionEntry<"posts">[];
+}
+
+const { posts } = Astro.props;
+---
+
+<div class="grid gap-4 sm:grid-cols-2">
+  {
+    posts.map((post) => {
+      return (
+        <a href={`/posts/${post.id}`}>
+          <div class="flex flex-col items-center rounded-2xl bg-gray-200 p-6 transition-all hover:scale-105 hover:bg-gray-300/90 dark:bg-gray-800 dark:hover:bg-gray-100/10">
+            <span class="py-4 text-8xl">{post.data.emoji}</span>
+            <h3 class="pt-2 text-xl font-semibold">{post.data.title}</h3>
+            <time
+              class="py-2 text-gray-500 dark:text-gray-400"
+              datetime={post.data.pubDate.toISOString()}
+            >
+              {timeAgo(post.data.pubDate)}
+            </time>
+          </div>
+        </a>
+      );
+    })
+  }
+</div>

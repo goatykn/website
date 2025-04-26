@@ -1,0 +1,16 @@
+---
+import HomeLink from "./HomeLink.astro";
+import Navigation from "./Navigation.astro";
+import ThemeButton from "./ThemeButton.astro";
+---
+
+<header
+  class="sticky top-0 z-50 flex items-center justify-between rounded-b-xl px-6 py-4 backdrop-blur-md"
+>
+  <nav class="flex items-center sm:gap-8">
+    <HomeLink />
+    <span class="pr-2 pl-4 text-gray-500 sm:hidden dark:text-gray-400">/</span>
+    <Navigation />
+  </nav>
+  <ThemeButton />
+</header>

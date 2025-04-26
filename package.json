@@ -1,0 +1,63 @@
+{
+  "name": "website",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "bun run cf-typegen && astro dev",
+    "build": "bun run cf-typegen && astro check && astro build --mode=$MODE",
+    "deploy": "echo $MODE && bun run clean && bun run build && wrangler pages deploy --branch $MODE",
+    "astro": "astro",
+    "cf-typegen": "wrangler types -e $MODE",
+    "clean": "rm -rf node_modules && rm -rf dist && rm -rf .astro && rm -rf .wrangler && rm -f worker-configuration.d.ts && bun install",
+    "format": "prettier --write .",
+    "lint": "astro check && eslint .",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@astrojs/check": "0.9.4",
+    "@astrojs/cloudflare": "^12.5.1",
+    "@astrojs/mdx": "^4.2.5",
+    "@astrojs/preact": "^4.0.10",
+    "@astrojs/rss": "4.0.11",
+    "@astrojs/sitemap": "^3.3.1",
+    "@tailwindcss/vite": "^4.1.4",
+    "astro": "^5.7.5",
+    "astro-cloudinary": "^1.3.2",
+    "js-confetti": "^0.12.0",
+    "markdown-it": "^14.1.0",
+    "preact": "^10.26.5",
+    "sanitize-html": "^2.16.0",
+    "tailwindcss": "^4.1.4",
+    "typescript": "^5.8.3",
+    "zenn-content-css": "^0.1.159",
+    "zenn-embed-elements": "^0.1.159",
+    "zenn-markdown-html": "^0.1.159"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@tailwindcss/typography": "^0.5.16",
+    "@types/markdown-it": "^14.1.2",
+    "@types/sanitize-html": "^2.15.0",
+    "@typescript-eslint/parser": "^8.31.0",
+    "eslint": "^9.25.1",
+    "eslint-plugin-astro": "^1.3.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "gray-matter": "^4.0.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "satori": "^0.12.2",
+    "wrangler": "^4.13.0"
+  },
+  "lint-staged": {
+    "*.{js,cjs,mjs,ts,jsx,tsx,astro}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{md,html,json,jsonc,yaml,yml}": [
+      "prettier --write"
+    ]
+  }
+}
