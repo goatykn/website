@@ -10,8 +10,14 @@ import openGraphImage from "./astro-integrations/open-graph-image";
 
 // @ts-ignore
 const { SITE_URL } = loadEnv(process.env.SITE_URL, process.cwd(), "");
+if (SITE_URL === "") {
+  throw new Error("SITE_URL is empty.");
+}
 // @ts-ignore
 const { MODE } = loadEnv(process.env.MODE, process.cwd(), "");
+if (MODE === "") {
+  throw new Error("MODE is empty.");
+}
 
 // https://astro.build/config
 // @ts-ignore
