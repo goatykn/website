@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "bun run cf-typegen && astro dev",
     "build": "bun run cf-typegen && astro check && astro build --mode=$MODE",
-    "deploy": "echo $MODE && bun run clean && bun run build && wrangler pages deploy --branch $MODE",
+    "deploy": "echo $MODE && bun run clean && bun run build && if [ \"$MODE\" = \"production\" ]; then wrangler pages deploy --branch main; else wrangler pages deploy --branch \"$MODE\"; fi",
     "astro": "astro",
     "cf-typegen": "wrangler types -e $MODE",
     "clean": "rm -rf node_modules && rm -rf dist && rm -rf .astro && rm -rf .wrangler && rm -f worker-configuration.d.ts && bun install",
