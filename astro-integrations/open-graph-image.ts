@@ -36,7 +36,7 @@ import { Resvg } from "@resvg/resvg-js";
  * - https://og-playground.vercel.app
  */
 const openGraphImage: () => AstroIntegration = (): AstroIntegration => ({
-  name: "satori-og",
+  name: "open-graph-image",
   hooks: {
     "astro:build:done": async ({ dir, pages }) => {
       try {
@@ -297,13 +297,30 @@ const openGraphImage: () => AstroIntegration = (): AstroIntegration => ({
             fs.writeFileSync(`${dir.pathname}${pathname}og.png`, png);
           }
         }
-        console.log(`\x1b[32mog:\x1b[0m Generated OpenGraph images\n`);
+        log("`**/*og.png` created at `dist`");
       } catch (e) {
+        log("OpenGraph image generation failed", true);
         console.log(e);
-        console.log(`\x1b[31mog:\x1b[0m OpenGraph image generation failed\n`);
       }
     }
   }
 });
+
+function log(message: string, isError: boolean = false) {
+  const now = color(new Date().toTimeString().split(" ")[0] ?? "", 90);
+  const label = color("[open-graph-image]", isError ? 31 : 34);
+  console.log(`${now} ${label} ${message}`);
+}
+
+/**
+ * Applies ANSI color codes to a given text string, allowing for colored output in the terminal.
+ *
+ * @param text - The text to be colored.
+ * @param code - The ANSI color code to apply to the text.
+ * @returns The text wrapped with the specified ANSI color code.
+ */
+function color(text: string, code: number) {
+  return `\x1b[${code}m${text}\x1b[0m`;
+}
 
 export default openGraphImage;
