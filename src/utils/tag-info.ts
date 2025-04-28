@@ -7,10 +7,6 @@ const TAG_MAP: Record<string, TagInfo> = {
   astro: { label: "Astro", emoji: "🧑‍🚀" },
   go: { label: "Go", emoji: "🦔" },
   test: { label: "Test", emoji: "🧪" },
-  tech: { label: "技術", emoji: "💻" },
-  life: { label: "生活", emoji: "🏡" },
-  food: { label: "食べ物", emoji: "🍣" },
-  travel: { label: "旅行", emoji: "✈️" },
   default: { label: "default", emoji: "🏷️" }
 };
 
