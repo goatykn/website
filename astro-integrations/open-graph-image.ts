@@ -1,8 +1,10 @@
 import type { AstroIntegration } from "astro";
-import satori from "satori";
+import satori, { type SatoriOptions } from "satori";
 import fs from "fs";
 import parseFrontmatter from "gray-matter";
 import { Resvg } from "@resvg/resvg-js";
+import type { InferEntrySchema } from "astro:content";
+import { getTagInfo } from "../src/utils/tag-info";
 
 /**
  * Generates OpenGraph images for an Astro project during the build process.
@@ -47,6 +49,25 @@ const openGraphImage: () => AstroIntegration = (): AstroIntegration => ({
           "src/assets/fonts/NotoSansJP-Bold.ttf"
         );
         const goatyImage = fs.readFileSync("src/assets/GoatyLogoImg.png");
+
+        const satoriOptions: SatoriOptions = {
+          width: 1200,
+          height: 630,
+          fonts: [
+            {
+              name: "NotoSansJP",
+              data: regularFont,
+              weight: 400,
+              style: "normal"
+            },
+            {
+              name: "NotoSansJP",
+              data: boldFont,
+              weight: 700,
+              style: "normal"
+            }
+          ]
+        };
 
         for (const { pathname } of pages) {
           if (pathname === "") {
@@ -126,24 +147,7 @@ const openGraphImage: () => AstroIntegration = (): AstroIntegration => ({
                   ]
                 }
               },
-              {
-                width: 1200,
-                height: 630,
-                fonts: [
-                  {
-                    name: "NotoSansJP",
-                    data: regularFont,
-                    weight: 400,
-                    style: "normal"
-                  },
-                  {
-                    name: "NotoSansJP",
-                    data: boldFont,
-                    weight: 700,
-                    style: "normal"
-                  }
-                ]
-              }
+              satoriOptions
             );
             const resvg = new Resvg(svg, {
               fitTo: {
@@ -159,7 +163,8 @@ const openGraphImage: () => AstroIntegration = (): AstroIntegration => ({
 
           if (pathname.startsWith("posts/")) {
             const file = fs.readFileSync(`src/${pathname}.md`);
-            const { title } = parseFrontmatter(file).data as { title: string };
+            const { title, tags } = parseFrontmatter(file)
+              .data as InferEntrySchema<"posts">;
 
             const svg = await satori(
               {
@@ -199,14 +204,54 @@ const openGraphImage: () => AstroIntegration = (): AstroIntegration => ({
                             type: "div",
                             props: {
                               style: {
-                                fontSize: "56px",
-                                fontWeight: 700,
-                                lineHeight: 1.5,
-                                color: "#000",
-                                wordBreak: "break-word",
-                                whiteSpace: "pre-wrap"
+                                display: "flex",
+                                flexDirection: "column"
                               },
-                              children: title
+                              children: [
+                                {
+                                  type: "div",
+                                  props: {
+                                    style: {
+                                      fontSize: "56px",
+                                      fontWeight: 700,
+                                      lineHeight: 1.5,
+                                      color: "#000",
+                                      wordBreak: "break-word",
+                                      whiteSpace: "pre-wrap"
+                                    },
+                                    children: title
+                                  }
+                                },
+                                {
+                                  type: "div",
+                                  props: {
+                                    style: {
+                                      display: "flex",
+                                      flexWrap: "wrap",
+                                      gap: "8px",
+                                      marginTop: "16px"
+                                    },
+                                    children: tags.map((tag: string) => {
+                                      const tagInfo = getTagInfo(tag);
+                                      return {
+                                        type: "span",
+                                        props: {
+                                          style: {
+                                            border: "2px solid #e5e7eb",
+                                            color: "#000",
+                                            fontSize: "24px",
+                                            fontWeight: 400,
+                                            padding: "8px 16px",
+                                            borderRadius: "16px",
+                                            fontFamily: "NotoSansJP"
+                                          },
+                                          children: `#${tagInfo.label}`
+                                        }
+                                      };
+                                    })
+                                  }
+                                }
+                              ]
                             }
                           },
                           {
@@ -215,7 +260,7 @@ const openGraphImage: () => AstroIntegration = (): AstroIntegration => ({
                               style: {
                                 position: "absolute",
                                 bottom: "36px",
-                                right: "36px",
+                                left: "56px",
                                 display: "flex",
                                 alignItems: "center",
                                 gap: "12px"
@@ -225,8 +270,8 @@ const openGraphImage: () => AstroIntegration = (): AstroIntegration => ({
                                   type: "div",
                                   props: {
                                     style: {
-                                      width: "148px",
-                                      height: "148px",
+                                      width: "128px",
+                                      height: "128px",
                                       borderRadius: "9999px",
                                       backgroundColor: "#fff",
                                       display: "flex",
@@ -251,7 +296,7 @@ const openGraphImage: () => AstroIntegration = (): AstroIntegration => ({
                                   type: "div",
                                   props: {
                                     style: {
-                                      fontSize: "64px",
+                                      fontSize: "48px",
                                       fontWeight: 700,
                                       color: "#000",
                                       fontFamily: "NotoSansJP"
@@ -268,24 +313,7 @@ const openGraphImage: () => AstroIntegration = (): AstroIntegration => ({
                   ]
                 }
               },
-              {
-                width: 1200,
-                height: 630,
-                fonts: [
-                  {
-                    name: "NotoSansJP",
-                    data: regularFont,
-                    weight: 400,
-                    style: "normal"
-                  },
-                  {
-                    name: "NotoSansJP",
-                    data: boldFont,
-                    weight: 700,
-                    style: "normal"
-                  }
-                ]
-              }
+              satoriOptions
             );
             const resvg = new Resvg(svg, {
               fitTo: {
@@ -306,6 +334,12 @@ const openGraphImage: () => AstroIntegration = (): AstroIntegration => ({
   }
 });
 
+/**
+ * Logs a message to the console with a timestamp and a label indicating its source.
+ *
+ * @param message - The message to log.
+ * @param isError - Optional. If `true`, the log is treated as an error and displayed in red. Defaults to `false`.
+ */
 function log(message: string, isError: boolean = false) {
   const now = color(new Date().toTimeString().split(" ")[0] ?? "", 90);
   const label = color("[open-graph-image]", isError ? 31 : 34);
