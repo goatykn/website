@@ -1,19 +1,38 @@
 ---
 import { getCollection } from "astro:content";
-import MarkdownPostLayout from "../../layouts/MarkdownPostLayout.astro";
 import lib from "zenn-markdown-html";
 import "zenn-content-css";
 import TagTips from "../../components/TagTips.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { formatDateToJapanese } from "../../utils/format-date";
+import LikeButton from "../../components/LikeButton.astro";
+import PostCardGrid from "../../components/PostCardGrid.astro";
+import NavigationButton from "../../components/NavigationButton.astro";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("posts");
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post }
-  }));
+  const allPosts = await getCollection("posts");
+  return allPosts.map((post) => {
+    const primaryTag = post.data.tags[0];
+    if (primaryTag === undefined) {
+      throw new Error(
+        "No tags specified for the post. Each post must have at least one tag."
+      );
+    }
+    const filteredPosts = allPosts.filter(
+      (v) => v.data.tags.includes(primaryTag) && v.id !== post.id
+    );
+    const descPosts = filteredPosts.sort(
+      (a, b) =>
+        new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+    );
+    return {
+      params: { slug: post.id },
+      props: { post, relatedPosts: descPosts.slice(0, 4) }
+    };
+  });
 }
 
-const { post } = Astro.props;
+const { post, relatedPosts } = Astro.props;
 
 // https://zenn.dev/rorisutarou/articles/ec3871ec55693d#2.-zenn-markdown-html%E3%82%92%E4%BD%BF%E3%81%86
 // @ts-ignore
@@ -22,14 +41,49 @@ const content = markdownToHtml(post.body!, {
   embedOrigin: "https://embed.zenn.studio"
 });
 
-const tags = post.data.tags;
+const primaryTag = post.data.tags[0];
+if (primaryTag === undefined) {
+  throw new Error(
+    "No tags specified for the post. Each post must have at least one tag."
+  );
+}
 ---
 
-<MarkdownPostLayout frontmatter={post.data} postSlug={post.id}>
-  <div class="mb-6">
-    <TagTips tags={tags} />
-  </div>
-  <div class="znc">
-    <Fragment set:html={content} />
-  </div>
-</MarkdownPostLayout>
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <article class="mb-24">
+    <div class="mb-10 flex flex-col items-center">
+      <span class="py-4 text-8xl">{post.data.emoji}</span>
+      <h1 class="mb-7 text-3xl font-semibold">{post.data.title}</h1>
+      <div class="flex gap-12">
+        <div class="my-1 flex items-center gap-2">
+          <time
+            class="text-gray-500 dark:text-gray-400"
+            datetime={post.data.pubDate.toISOString()}
+            >{formatDateToJapanese(post.data.pubDate)}</time
+          >
+        </div>
+      </div>
+    </div>
+    <div class="mb-6">
+      <TagTips tags={post.data.tags} />
+    </div>
+    <div class="znc">
+      <Fragment set:html={content} />
+    </div>
+    <div class="mt-20">
+      <LikeButton server:defer postSlug={post.id} />
+    </div>
+  </article>
+  <section class="mb-20">
+    <h2 class="mb-7 text-2xl font-semibold">Related Posts</h2>
+    <div class="mb-6">
+      <TagTips tags={[primaryTag]} />
+    </div>
+    <PostCardGrid posts={relatedPosts} />
+    <div class="mt-8 flex justify-end">
+      <NavigationButton href={`/tags/${primaryTag}`} current={true}>
+        See More →</NavigationButton
+      >
+    </div>
+  </section>
+</BaseLayout>
