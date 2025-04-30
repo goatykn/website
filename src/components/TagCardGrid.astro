@@ -14,13 +14,12 @@ const { tagCounts } = Astro.props;
       const tagInfo = getTagInfo(tag);
       return (
         <a href={`/tags/${tag}`}>
-          <div class="flex flex-col items-center rounded-2xl bg-gray-200 p-6 transition-all hover:scale-105 hover:bg-gray-300/90 dark:bg-gray-800 dark:hover:bg-gray-100/10">
-            <span class="py-4 text-8xl">{tagInfo.emoji}</span>
+          <div class="relative flex flex-col items-center rounded-2xl bg-gray-200 p-6 transition-all hover:scale-105 hover:bg-gray-300/90 dark:bg-gray-800 dark:hover:bg-gray-100/10">
+            <span class="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-gray-500 text-sm font-bold text-gray-50 dark:bg-gray-400 dark:text-gray-900">
+              {count}
+            </span>
+            <tagInfo.icon class="h-24 w-24" />
             <h3 class="pt-2 text-xl font-semibold">{tagInfo.label}</h3>
-            <div class="py-2 text-gray-500 dark:text-gray-400">
-              ({count}
-              {count != 1 ? "posts" : "post"})
-            </div>
           </div>
         </a>
       );

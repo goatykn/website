@@ -15,9 +15,10 @@ const { tags } = Astro.props;
       return (
         <a
           href={`/tags/${tag}`}
-          class="rounded-xl bg-gray-200/90 p-2 text-sm transition-all dark:bg-gray-300/10"
+          class="flex items-center gap-1 rounded-2xl border border-gray-300 px-2 py-1 text-sm transition-all hover:scale-105 hover:bg-gray-300/90 dark:border-gray-700 dark:hover:bg-gray-100/10"
         >
-          {tagInfo.emoji} {tagInfo.label}
+          <tagInfo.icon class="h-6 w-6" />
+          <span>{tagInfo.label}</span>
         </a>
       );
     })

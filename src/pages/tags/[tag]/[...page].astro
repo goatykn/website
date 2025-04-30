@@ -40,7 +40,10 @@ const tagInfo = getTagInfo(tag);
   title=`${tagInfo.label}`
   description=`${tagInfo.label}タグが関連付けられた投稿の一覧ページです。`
 >
-  <h1 class="mb-10 text-4xl font-semibold">{tagInfo.emoji} {tagInfo.label}</h1>
+  <div class="mb-10 flex items-center gap-4">
+    <tagInfo.icon class="h-24 w-24" />
+    <h1 class="text-4xl font-semibold">{tagInfo.label}</h1>
+  </div>
   <PostCardGrid posts={page.data} />
   <div class="my-8">
     <PaginationButton prevUrl={page.url.prev} nextUrl={page.url.next} />
