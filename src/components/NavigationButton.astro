@@ -1,16 +1,14 @@
 ---
 interface Props {
   href: string;
-  current?: boolean;
 }
 
-const { href, current } = Astro.props;
+const { href } = Astro.props;
 ---
 
 <a
   href={href}
-  class={"inline-block rounded-lg py-2 px-3 hover:scale-105 font-semibold text-sm transition-all hover:bg-gray-200/90 dark:hover:bg-gray-300/10 " +
-    `${(current ?? true) && "bg-gray-200/90 dark:bg-gray-300/10"}`}
+  class="inline-block rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold transition-all hover:scale-105 hover:bg-gray-200/90 dark:border-gray-700 dark:hover:bg-gray-300/10"
 >
   <slot />
 </a>

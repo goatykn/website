@@ -1,6 +1,5 @@
 ---
 import Dropdown from "./Dropdown.astro";
-import NavigationButton from "./NavigationButton.astro";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -21,9 +20,15 @@ const currentNavigationName = navigation.find((nav) =>
           ? currentPath === nav.href
           : currentPath.startsWith(nav.href);
       return (
-        <NavigationButton href={nav.href} current={isCurrentPath}>
+        <a
+          href={nav.href}
+          class={
+            "inline-block rounded-lg px-3 py-2 text-sm font-semibold transition-all hover:scale-105 hover:bg-gray-200/90 dark:hover:bg-gray-300/10 " +
+            `${(isCurrentPath ?? true) && "bg-gray-200/90 dark:bg-gray-300/10"}`
+          }
+        >
           {nav.name}
-        </NavigationButton>
+        </a>
       );
     })
   }
