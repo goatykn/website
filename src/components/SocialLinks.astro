@@ -5,14 +5,13 @@ import ExternalLink from "./ExternalLink.astro";
 
 const X_HREF = "https://x.com/goatykn";
 const GITHUB_HREF = "https://github.com/goatykn";
-const logoSize = 24;
 ---
 
 <div class="flex items-center justify-center gap-4">
   <ExternalLink href={X_HREF} label="Link to Goaty's X account">
-    <XLogo width={logoSize} height={logoSize} />
+    <XLogo class="h-6 w-6" />
   </ExternalLink>
   <ExternalLink href={GITHUB_HREF} label="Link to Goaty's GitHub account">
-    <GitHubLogo width={logoSize} height={logoSize} />
+    <GitHubLogo class="h-6 w-6" />
   </ExternalLink>
 </div>
