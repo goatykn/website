@@ -5,6 +5,7 @@ import PostCardGrid from "../components/PostCardGrid.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import GoatyLogo from "../assets/GoatyLogo.svg";
 import SocialLinks from "../components/SocialLinks.astro";
+import TagCardGrid from "../components/TagCardGrid.astro";
 
 const allPosts = await getCollection("posts");
 const recentPosts = allPosts
@@ -13,6 +14,21 @@ const recentPosts = allPosts
       new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
   )
   .slice(0, 4);
+
+const tagCounts = new Map<string, number>();
+allPosts.forEach((post) => {
+  post.data.tags.forEach((tag) => {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  });
+});
+
+const recentTags = Array.from(
+  new Set(recentPosts.flatMap((post) => post.data.tags))
+).slice(0, 4);
+
+const sortedTagCounts = new Map<string, number>(
+  recentTags.map((tag) => [tag, tagCounts.get(tag) ?? 0])
+);
 ---
 
 <BaseLayout
@@ -37,6 +53,14 @@ const recentPosts = allPosts
     <PostCardGrid posts={recentPosts} />
     <div class="mt-8 flex justify-end">
       <NavigationButton href={"/posts"}> See More →</NavigationButton>
+    </div>
+  </section>
+
+  <section class="mb-14">
+    <h2 class="mb-7 text-2xl font-semibold">Recent Tags</h2>
+    <TagCardGrid tagCounts={sortedTagCounts} />
+    <div class="mt-8 flex justify-end">
+      <NavigationButton href={"/tags"}> See More →</NavigationButton>
     </div>
   </section>
 </BaseLayout>
