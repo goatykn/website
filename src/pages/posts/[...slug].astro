@@ -74,16 +74,21 @@ if (primaryTag === undefined) {
       <LikeButton server:defer postSlug={post.id} />
     </div>
   </article>
-  <section class="mb-20">
-    <h2 class="mb-7 text-2xl font-semibold">Related Posts</h2>
-    <div class="mb-6">
-      <TagTips tags={[primaryTag]} />
-    </div>
-    <PostCardGrid posts={relatedPosts} />
-    <div class="mt-8 flex justify-end">
-      <NavigationButton href={`/tags/${primaryTag}`}>
-        See More →</NavigationButton
-      >
-    </div>
-  </section>
+
+  {
+    relatedPosts.length > 0 && (
+      <section class="mb-20">
+        <h2 class="mb-7 text-2xl font-semibold">Related Posts</h2>
+        <div class="mb-6">
+          <TagTips tags={[primaryTag]} />
+        </div>
+        <PostCardGrid posts={relatedPosts} />
+        <div class="mt-8 flex justify-end">
+          <NavigationButton href={`/tags/${primaryTag}`}>
+            See More →
+          </NavigationButton>
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>
