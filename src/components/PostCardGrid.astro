@@ -20,6 +20,7 @@ const { posts } = Astro.props;
             <time
               class="py-2 text-gray-500 dark:text-gray-400"
               datetime={post.data.pubDate.toISOString()}
+              data-pub-date={post.data.pubDate.toISOString()}
             >
               {timeAgo(post.data.pubDate)}
             </time>
@@ -29,3 +30,15 @@ const { posts } = Astro.props;
     })
   }
 </div>
+
+<script>
+  import { timeAgo } from "../utils/format-date";
+
+  document.querySelectorAll("time[data-pub-date]").forEach((el) => {
+    const pubDate = el.getAttribute("data-pub-date");
+    if (pubDate) {
+      const date = new Date(pubDate);
+      el.textContent = timeAgo(date);
+    }
+  });
+</script>
